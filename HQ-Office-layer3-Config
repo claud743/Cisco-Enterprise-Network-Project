@@ -1,0 +1,244 @@
+Building configuration...
+
+Current configuration : 4366 bytes
+!
+version 12.2(37)SE1
+service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+!
+hostname CoreSW
+!
+!
+enable secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKX7m0
+!
+!
+ip dhcp excluded-address 192.168.10.1 192.168.10.10
+ip dhcp excluded-address 192.168.20.1 192.168.20.10
+ip dhcp excluded-address 192.168.30.1 192.168.30.10
+ip dhcp excluded-address 192.168.40.1 192.168.40.10
+ip dhcp excluded-address 192.168.50.1 192.168.50.10
+ip dhcp excluded-address 192.168.60.1 192.168.60.10
+ip dhcp excluded-address 192.168.100.1 192.168.100.10
+!
+ip dhcp pool HR
+ network 192.168.10.0 255.255.255.0
+ default-router 192.168.10.1
+ dns-server 8.8.8.8
+ip dhcp pool Finance
+ network 192.168.20.0 255.255.255.0
+ default-router 192.168.20.1
+ dns-server 8.8.8.8
+ip dhcp pool IT
+ network 192.168.30.0 255.255.255.0
+ default-router 192.168.30.1
+ dns-server 8.8.8.8
+ip dhcp pool Sales
+ network 192.168.40.0 255.255.255.0
+ default-router 192.168.40.1
+ dns-server 8.8.8.8
+ip dhcp pool Server
+ network 192.168.50.0 255.255.255.0
+ default-router 192.168.50.1
+ dns-server 8.8.8.8
+ip dhcp pool Guest
+ network 192.168.60.0 255.255.255.0
+ default-router 192.168.60.1
+ dns-server 8.8.8.8
+ip dhcp pool IPphones
+ network 192.168.100.0 255.255.255.0
+ default-router 192.168.100.1
+ option 150 ip 192.168.100.10
+!
+!
+ip routing
+!
+!
+!
+!
+username admin secret 5 $1$mERr$GvDaTJK9lhdXRUPWKA74O0
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+no ip domain-lookup
+!
+!
+spanning-tree mode pvst
+!
+!
+!
+!
+!
+!
+interface FastEthernet0/1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet0/2
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet0/3
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet0/4
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet0/5
+ switchport access vlan 100
+ switchport mode access
+!
+interface FastEthernet0/6
+ shutdown
+!
+interface FastEthernet0/7
+ shutdown
+!
+interface FastEthernet0/8
+ shutdown
+!
+interface FastEthernet0/9
+ shutdown
+!
+interface FastEthernet0/10
+ shutdown
+!
+interface FastEthernet0/11
+ shutdown
+!
+interface FastEthernet0/12
+ shutdown
+!
+interface FastEthernet0/13
+ shutdown
+!
+interface FastEthernet0/14
+ shutdown
+!
+interface FastEthernet0/15
+ shutdown
+!
+interface FastEthernet0/16
+ shutdown
+!
+interface FastEthernet0/17
+ shutdown
+!
+interface FastEthernet0/18
+ shutdown
+!
+interface FastEthernet0/19
+ shutdown
+!
+interface FastEthernet0/20
+ shutdown
+!
+interface FastEthernet0/21
+ shutdown
+!
+interface FastEthernet0/22
+ shutdown
+!
+interface FastEthernet0/23
+ shutdown
+!
+interface FastEthernet0/24
+ shutdown
+!
+interface GigabitEthernet0/1
+ no switchport
+ ip address 10.0.0.1 255.255.255.252
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/2
+ shutdown
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan10
+ mac-address 000c.cf46.ba01
+ ip address 192.168.10.1 255.255.255.0
+!
+interface Vlan20
+ mac-address 000c.cf46.ba02
+ ip address 192.168.20.1 255.255.255.0
+ ip access-group FINANCE_BLOCK in
+!
+interface Vlan30
+ mac-address 000c.cf46.ba03
+ ip address 192.168.30.1 255.255.255.0
+!
+interface Vlan40
+ mac-address 000c.cf46.ba04
+ ip address 192.168.40.1 255.255.255.0
+!
+interface Vlan50
+ mac-address 000c.cf46.ba05
+ ip address 192.168.50.1 255.255.255.0
+!
+interface Vlan60
+ mac-address 000c.cf46.ba06
+ ip address 192.168.60.1 255.255.255.0
+ ip access-group GUEST-BLOCK in
+!
+interface Vlan100
+ mac-address 000c.cf46.ba07
+ ip address 192.168.100.1 255.255.255.0
+!
+router ospf 1
+ log-adjacency-changes
+ network 192.168.0.0 0.0.255.255 area 0
+ network 10.0.0.0 0.0.0.3 area 0
+!
+ip classless
+!
+ip flow-export version 9
+!
+!
+ip access-list extended FINANCE_BLOCK
+ deny ip 192.168.20.0 0.0.0.255 192.168.10.0 0.0.0.255
+ deny ip 192.168.20.0 0.0.0.255 host 192.168.100.11
+ permit ip any any
+ip access-list extended GUEST-BLOCK
+ permit icmp 192.168.60.0 0.0.0.255 192.168.0.0 0.0.255.255 echo-reply
+ permit icmp 192.168.60.0 0.0.0.255 192.168.0.0 0.0.255.255 ttl-exceeded
+ permit icmp 192.168.60.0 0.0.0.255 192.168.0.0 0.0.255.255 unreachable
+ deny ip 192.168.60.0 0.0.0.255 192.168.0.0 0.0.255.255
+ permit ip 192.168.60.0 0.0.0.255 any
+!
+!
+!
+!
+!
+!
+logging 192.168.50.11
+line con 0
+ exec-timeout 5 0
+ password headoffice
+ logging synchronous
+ login
+!
+line aux 0
+!
+line vty 0
+ password cisco
+ login
+line vty 1 4
+ login
+!
+!
+!
+!
+end
